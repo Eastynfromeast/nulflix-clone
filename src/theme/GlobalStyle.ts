@@ -55,11 +55,11 @@ table {
 }
 
 body {
-	background-color: ${props => props.theme.black.veryDark};
-	color: ${props => props.theme.white.lighter};
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 a {
     text-decoration: none;
+	color: inherit;
 }
 `;
