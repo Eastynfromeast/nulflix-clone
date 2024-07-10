@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useMotionValueEvent, useScroll } from "framer-motion";
+import { motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { Col } from "../styles/header";
@@ -78,16 +78,15 @@ const logoVariants = {
 };
 
 function Header() {
-	const { scrollY } = useScroll();
-	useMotionValueEvent(scrollY, "change", l => {
-		console.log(l);
-	});
-
 	const homeMatch = useMatch("/");
 	const tvMatch = useMatch("/tv");
+
+	const { scrollY } = useScroll();
+	const headerBg = useTransform(scrollY, [0, 80], ["rgb(20, 20, 20)", "rgb(255,255,255)"]);
+
 	return (
 		<>
-			<Nav>
+			<Nav style={{ backgroundColor: headerBg }}>
 				<Col>
 					<Logo
 						variants={logoVariants}
