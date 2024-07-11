@@ -2,6 +2,7 @@ import { motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } 
 import { Link, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { Col } from "../styles/header";
+import { useState } from "react";
 
 const Nav = styled(motion.nav)`
 	display: flex;
@@ -47,7 +48,10 @@ const Item = styled.li`
 `;
 
 const Search = styled.span`
-	color: white;
+	position: relative;
+	color: #fff;
+	display: flex;
+	align-items: center;
 	svg {
 		height: 25px;
 	}
@@ -65,6 +69,12 @@ const Circle = styled(motion.span)`
 	background-color: ${props => props.theme.red};
 `;
 
+const Input = styled(motion.input)`
+	transform-origin: right center;
+	position: absolute;
+	left: -150px;
+`;
+
 const logoVariants = {
 	normal: {
 		fillOpacity: 1,
@@ -78,12 +88,13 @@ const logoVariants = {
 };
 
 function Header() {
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const homeMatch = useMatch("/");
 	const tvMatch = useMatch("/tv");
 
 	const { scrollY } = useScroll();
 	const headerBg = useTransform(scrollY, [0, 80], ["rgb(20, 20, 20)", "rgb(255,255,255)"]);
-
+	const toggleSearch = () => setIsSearchOpen(prev => !prev);
 	return (
 		<>
 			<Nav style={{ backgroundColor: headerBg }}>
@@ -115,15 +126,22 @@ function Header() {
 					</Items>
 				</Col>
 				<Col>
-					<Search>
+					<Search onClick={toggleSearch}>
 						{" "}
-						<svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<motion.svg
+							animate={{ x: isSearchOpen ? -175 : 0 }}
+							transition={{ ease: "linear" }}
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
 							<path
 								fillRule="evenodd"
 								d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
 								clipRule="evenodd"
 							></path>
-						</svg>
+						</motion.svg>
+						<Input animate={{ scaleX: isSearchOpen ? 1 : 0 }} placeholder="Search for a movie or tv show" />
 					</Search>
 				</Col>
 			</Nav>
