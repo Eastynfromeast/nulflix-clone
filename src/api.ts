@@ -34,3 +34,7 @@ export function getMovies() {
 export function getMovie(movieId: string) {
 	return fetch(`${BASE_URL}/movie/movie_id=${movieId}?api_key=${API_KEY}`, getMoviesOptions).then(response => response.json());
 }
+
+export function searchMovie(keyword: string) {
+	return fetch(`${BASE_URL}/search/keyword?query=${keyword}?api_key=${API_KEY}`, getMoviesOptions).then(response => response.json());
+}

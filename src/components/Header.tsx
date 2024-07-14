@@ -1,8 +1,9 @@
 import { motion, useScroll, useAnimation, useMotionValueEvent, useTransform } from "framer-motion";
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Col } from "../styles/header";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
 	display: flex;
@@ -47,7 +48,7 @@ const Item = styled.li`
 	}
 `;
 
-const Search = styled.span`
+const Search = styled.form`
 	position: relative;
 	color: #fff;
 
@@ -106,11 +107,15 @@ const navVariants = {
 	},
 };
 
+interface IForm {
+	keyword: string;
+}
+
 function Header() {
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const homeMatch = useMatch("/");
 	const tvMatch = useMatch("/tv");
-
+	const navigate = useNavigate();
 	const { scrollY } = useScroll();
 	const headerBg = useTransform(scrollY, [0, 80], ["rgb(20, 20, 20)", "rgb(255,255,255)"]);
 	const inputAnimation = useAnimation();
@@ -133,6 +138,11 @@ function Header() {
 			});
 		}
 		setIsSearchOpen(prev => !prev);
+	};
+
+	const { register, handleSubmit } = useForm<IForm>();
+	const onValid = (data: IForm) => {
+		navigate(`/search?keyword=${data.keyword}`);
 	};
 	return (
 		<>
@@ -165,9 +175,10 @@ function Header() {
 					</Items>
 				</Col>
 				<Col>
-					<Search onClick={toggleSearch}>
+					<Search onSubmit={handleSubmit(onValid)}>
 						{" "}
 						<motion.svg
+							onClick={toggleSearch}
 							animate={{ x: isSearchOpen ? -185 : 0 }}
 							transition={{ ease: "linear" }}
 							fill="currentColor"
@@ -180,7 +191,12 @@ function Header() {
 								clipRule="evenodd"
 							></path>
 						</motion.svg>
-						<Input animate={inputAnimation} initial={{ scaleX: 0 }} placeholder="Search for a movie or tv show" />
+						<Input
+							{...register("keyword", { required: true, minLength: 2 })}
+							animate={inputAnimation}
+							initial={{ scaleX: 0 }}
+							placeholder="Search for a movie or tv show"
+						/>
 					</Search>
 				</Col>
 			</Nav>
