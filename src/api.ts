@@ -30,3 +30,7 @@ const getMoviesOptions = {
 export function getMovies() {
 	return fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`, getMoviesOptions).then(response => response.json());
 }
+
+export function getMovie(movieId: string) {
+	return fetch(`${BASE_URL}/movie/movie_id=${movieId}?api_key=${API_KEY}`, getMoviesOptions).then(response => response.json());
+}
